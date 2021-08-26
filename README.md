@@ -192,4 +192,39 @@ test.plot()
 
 
 ### Model Fitting!
+Model fitting turns out to be very easy in python with only some simple snippets of code
+```
+Dep. Variable:	Close	No. Observations:	834
+Model:	ARIMA(1, 1, 1)	Log Likelihood	-1504.070
+Date:	Wed, 25 Aug 2021	AIC	3014.140
+Time:	20:35:50	BIC	3028.315
+Sample:	0	HQIC	3019.575
+- 834		
+Covariance Type:	opg		
+coef	std err	z	P>|z|	[0.025	0.975]
+ar.L1	0.8449	0.028	29.793	0.000	0.789	0.901
+ma.L1	-0.9473	0.020	-47.674	0.000	-0.986	-0.908
+sigma2	2.1661	0.025	87.996	0.000	2.118	2.214
+Ljung-Box (L1) (Q):	1.38	Jarque-Bera (JB):	85514.71
+Prob(Q):	0.24	Prob(JB):	0.00
+Heteroskedasticity (H):	2.14	Skew:	4.18
+Prob(H) (two-sided):	0.00	Kurtosis:	51.93
+
+```
+
+> Note that here our Ljung-Box p value is large, this is good because the null hypothesis of the test is the model does not show lack of fit. A significant p-value in this test rejects the null hypothesis that the time series isn’t autocorrelated, which means that the residuals are independent which is what we want for the model to be correct.
+
+> To confim, residual is plotted. Note that we want the residual to look like white noise, so then we know there isn't much we can do on the modelling side.
+
+```
+residuals = pd.DataFrame(model.resid)
+fig, ax = plt.subplots(1,2)
+residuals.plot(title="Residuals", ax=ax[0])
+residuals.plot(kind='kde', title='Density', ax=ax[1])
+plt.rcParams["figure.figsize"] = (20,10)
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/77589878/130881926-c3e2d3fa-1084-43a1-8e3c-01629f2c915e.png)
+
+
 
