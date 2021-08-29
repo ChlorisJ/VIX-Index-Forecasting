@@ -97,7 +97,7 @@ plot_acf(np.array(B))
 ```
 ![image](https://user-images.githubusercontent.com/77589878/130710877-1afbea5c-52f8-4731-ac4b-4e4b8c5d9be8.png)
 
-> Hun... This is interesting because we can see that ACF plot is showing a 'decay' indicating that our time series may be non-stationary while the ADF test suggesting otherwise. 
+> Hun... This is interesting because we can see that ACF plot is showing a 'decay' indicating that our time series may be non-stationary while the ADF test suggested otherwise. 
 
 > It's time for some differencing experiments!
 
@@ -168,7 +168,8 @@ Total fit time: 9.502 seconds
 ### Test Train Split
 
 Before training the model, let's split our data into train and test sets. Therefore we can make predictions on the test data and see how it performs.
-In this analysis, I am breaking down the train:test into 95%:5%
+In this analysis, my test set consists of the last 30 datapoints of my series 
+
 ```
 train=B.iloc[:-30]
 test=B.iloc[-30:]
@@ -184,11 +185,12 @@ Training Observations: 848
 Testing Observations: 30
 ```
 To visualize the split.
+
 ```
 train.plot()
 test.plot()
 ```
-![image](https://user-images.githubusercontent.com/77589878/130713347-6e429ceb-b71b-4473-ac74-a22c8da6ec86.png)
+![image](https://user-images.githubusercontent.com/77589878/131268970-2ab4437e-4256-4cb1-97a8-5b1651eb6355.png)
 
 
 ### Model Fitting
@@ -256,19 +258,21 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/77589878/131267938-bc2ee796-6430-4f70-b378-8da2b3c9c784.png)
 
 
-Please note the index is generated with code below. I had to manually take out some holidays for the indexes to match
+Please note the index is generated with code below. I had to manually pluck out some holidays for the indexes to match. 
 
 ```
 index=pd.bdate_range(start=pd.to_datetime('2019-12-18'),end=pd.to_datetime('01/31/2020'))
 index = index[index_future_dates != '2019-12-25' ]
-index = index[index1 != '2020-01-01']
-index = index[index2 != '2020-01-20']
+index = index[index != '2020-01-01']
+index = index[index != '2020-01-20']
 index
 ```
 
-Let's zoom in our prediction!
+Let's zoom in on our prediction!
 
 ![image](https://user-images.githubusercontent.com/77589878/131267948-06e8fd21-9470-43d8-8928-d88967231953.png)
+
+> Overall this is not bad, my prediction is at the middle of the test set. However we can see that it is having some trouble fitting the spike at the end. Let's check model performance
 
 
 ### Model Performance 
@@ -285,5 +289,4 @@ mape
 ```
 
 > Not bad I'd say! A .0753 MAPE (7.53%) means that my model is about 92.47% accurate in predicting the next 30 observations.
-
 
