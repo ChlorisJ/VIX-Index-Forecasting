@@ -170,18 +170,18 @@ Total fit time: 9.502 seconds
 Before training the model, let's split our data into train and test sets. Therefore we can make predictions on the test data and see how it performs.
 In this analysis, I am breaking down the train:test into 95%:5%
 ```
-X = B.Close
-train_size = int(len(X) * 0.95)
-train, test = X[0:train_size], X[train_size:len(X)]
-print('Observations: %d' % (len(X)))
+train=B.iloc[:-30]
+test=B.iloc[-30:]
+
+print('Observations: %d' % (len(B.Close)))
 print('Training Observations: %d' % (len(train)))
 print('Testing Observations: %d' % (len(test)))
 
 ```
 ```
 Observations: 878
-Training Observations: 834
-Testing Observations: 44
+Training Observations: 848
+Testing Observations: 30
 ```
 To visualize the split.
 ```
@@ -191,7 +191,7 @@ test.plot()
 ![image](https://user-images.githubusercontent.com/77589878/130713347-6e429ceb-b71b-4473-ac74-a22c8da6ec86.png)
 
 
-### Model Fitting!
+### Model Fitting
 Model fitting turns out to be very easy in python with only some simple snippets of code
 ```
 Dep. Variable:	Close	No. Observations:	834
@@ -214,7 +214,7 @@ Prob(H) (two-sided):	0.00	Kurtosis:	51.93
 
 > Note that here our Ljung-Box p value is large, this is good because the null hypothesis of the test is the model does not show lack of fit. A significant p-value in this test rejects the null hypothesis that the time series isn’t autocorrelated, which means that the residuals are independent which is what we want for the model to be correct.
 
-> To confim, residual is plotted. Note that we want the residual to look like white noise, so then we know there isn't much we can do on the modelling side.
+> To confim, residuals are plotted. Note that we want the residual to look like white noise, so then we know there isn't much we can do on the modelling side.
 
 ```
 residuals = pd.DataFrame(model.resid)
@@ -226,5 +226,57 @@ plt.show()
 ```
 ![image](https://user-images.githubusercontent.com/77589878/130881926-c3e2d3fa-1084-43a1-8e3c-01629f2c915e.png)
 
+> We can see that our series does look like white noise, and is normally distributed around 0, we are good!
+
+
+### Forecasting 
+
+Now we can use our model for prediction in the test set
+
+```
+start=len(train)
+end=len(train)+len(test)-1
+pred=model.predict(start=start,end=end,typ='levels')
+pred.index=index
+
+plt.ylim([5, 40])
+plt.plot(train,label='Train')
+plt.plot(test, label='Test')
+plt.plot(pred,label='Predict')
+plt.legend(loc='upper left', fontsize=12)
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/77589878/131267938-bc2ee796-6430-4f70-b378-8da2b3c9c784.png)
+
+
+Please note the index is generated with code below. I had to manully take out some holidays for the indexes to match
+
+```
+index=pd.bdate_range(start=pd.to_datetime('2019-12-18'),end=pd.to_datetime('01/31/2020'))
+index = index[index_future_dates != '2019-12-25' ]
+index = index[index1 != '2020-01-01']
+index = index[index2 != '2020-01-20']
+index
+```
+
+Let's zoom in our prediction!
+
+![image](https://user-images.githubusercontent.com/77589878/131267948-06e8fd21-9470-43d8-8928-d88967231953.png)
+
+
+### Model Performance 
+For my model performance metric I am using MAPE. It is scale-independent in percentage so they can be used to compare forecasts between different series
+
+```
+Pred = pred.values
+Test = test.values.T
+mape = np.mean(np.abs(Pred - Test)/np.abs(Test)) 
+mape
+```
+```
+.07536801502900345
+```
+
+> Not bad I'd say! A .0753 MAPE (7.53%) means that my model is about 92.47% accurate in predicting the next 30 observations.
 
 
