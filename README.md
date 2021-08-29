@@ -193,6 +193,13 @@ test.plot()
 
 ### Model Fitting
 Model fitting turns out to be very easy in python with only some simple snippets of code
+
+```
+from statsmodels.tsa.arima.model import ARIMA
+model=ARIMA(train,order=(1,1,1))
+model=model.fit()
+model.summary()
+```
 ```
 Dep. Variable:	Close	No. Observations:	834
 Model:	ARIMA(1, 1, 1)	Log Likelihood	-1504.070
@@ -249,7 +256,7 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/77589878/131267938-bc2ee796-6430-4f70-b378-8da2b3c9c784.png)
 
 
-Please note the index is generated with code below. I had to manully take out some holidays for the indexes to match
+Please note the index is generated with code below. I had to manually take out some holidays for the indexes to match
 
 ```
 index=pd.bdate_range(start=pd.to_datetime('2019-12-18'),end=pd.to_datetime('01/31/2020'))
