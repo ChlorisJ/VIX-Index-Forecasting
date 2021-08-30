@@ -7,7 +7,7 @@
 The VIX or the Cboe Volatility Index is a real-time index that represents the market's expectations for the relative strength of near-term price changes of the S&P 500 index (SPX). It is an important index in the world of trading and investment because it provides a quantifiable measure of market risk and investors' sentiments.
 
 
-## Visualizing the data 
+## Visualizing the Data 
 
 ```
 df = pd.read_csv('VIXX.csv')
@@ -35,7 +35,7 @@ B = pd.DataFrame(dat)
 ```
 
 
-## Checking For Stationarity
+## Checking for Stationarity
 
 When forecasting, most time series models assume that each point is independent of one another. The best indication of this is when the dataset of past instances is **stationary**. 
 
