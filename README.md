@@ -290,3 +290,12 @@ mape
 
 > Not bad I'd say! A .0753 MAPE (7.53%) means that my model is about 92.47% accurate in predicting the next 30 observations.
 
+
+## Limitation & Next step
+
+We can see that ARIMA model isn't great at capturing seasonalites, hence the next step of the project would be:
+- To change forecasting perod (longer/shorter)
+- To resample the data into weekly/monthly data ->  ```df.resample('M').mean()```
+- To leverage other models (SARIMA, GARCH, VAR, etc., even deep learning!)
+
+
